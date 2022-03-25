@@ -1,5 +1,5 @@
 <template>
-  <side-bar />
+  <div></div>
 </template>
 
 <script lang="ts">
@@ -9,6 +9,6 @@ import SideBar from "~/components/SideBar.vue";
 export default Vue.extend({
   components: { SideBar },
   name: "IndexPage",
-  layout: "blog",
+  layout: "default",
 });
 </script>
