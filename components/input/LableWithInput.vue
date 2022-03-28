@@ -12,14 +12,24 @@
       :type="inputType"
       class="block p-2 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 sm:text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
       @input="emitCurrStateToParent($event)"
+      :placeholder="placeholder ? placeholder : ''"
+      :min="min"
+      :max="max"
     />
+
     <select
       v-if="inputType === 'dropdown'"
       class="border border-gray-300 rounded-full text-gray-900 h-10 pl-5 pr-10 bg-gray-50 hover:border-gray-400 focus:outline-none appearance-none"
       @change="emitCurrStateToParent($event)"
     >
       <option v-for="item in dropItem" :key="item.id" :value="item.elm">
-        {{ name === undefined ? name : `${name}-`}}{{ item.elm }}
+        {{
+          name === undefined || name === "flexDirection"
+            ? "flex"
+            : name
+            ? name
+            : `${name}-`
+        }}-{{ item.elm }}
       </option>
     </select>
   </div>
@@ -31,6 +41,18 @@ export default Vue.extend({
   props: {
     label: {
       type: String,
+      required: false,
+    },
+    placeholder: {
+      type: String,
+      required: false,
+    },
+    min: {
+      type: Number,
+      required: false,
+    },
+    max: {
+      type: Number,
       required: false,
     },
     inputType: {
@@ -58,8 +80,12 @@ export default Vue.extend({
   },
   methods: {
     emitCurrStateToParent(event: any) {
-      console.log("Here from child : ", event);
-      this.$emit("emitCurrStateToParent", event.target.value);
+      // console.log("Here from child : ", event);
+      console.log(event.target.value);
+      this.$emit("emitCurrStateToParent", {
+        name: this.name,
+        value: event.target.value,
+      });
     },
   },
 });

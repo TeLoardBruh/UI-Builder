@@ -1,13 +1,21 @@
 <template>
   <div>
     <div class="flex flex-wrap space-x-4 space-y-4 items-end">
-      <input-lable-with-input
-        :label="'Items'"
-        :inputType="'number'"
-        :name="'item'"
-        v-on:emitCurrStateToParent="reciveDataFromChild($event)"
-        v-once
-      />
+      <div class="flex flex-col">
+        {{ itemFlex }}
+
+        <input-lable-with-input
+          :label="'Items'"
+          :inputType="'range'"
+          :name="'item'"
+          v-on:emitCurrStateToParent="reciveDataFromChild($event)"
+          :placeholder="String(itemFlex)"
+          :min="1"
+          :max="36"
+          :valueRange="itemFlex"
+          v-once
+        />
+      </div>
       <input-lable-with-input
         :label="'Justify Content'"
         :inputType="'dropdown'"
@@ -35,6 +43,7 @@
       <input-lable-with-input
         :label="'Flex Direction'"
         :inputType="'dropdown'"
+        :name="'flexDirection'"
         :dropItem="flexDirection"
         v-on:emitCurrStateToParent="reciveDataFromChild($event)"
         v-once
@@ -52,7 +61,20 @@
     <div class="bg-gray-300 w-full lg:w-4/5 h-80 mt-10">
       <layouts-flex
         :items="itemFlex"
-        :class="'flex ' + 'flex-' + flexWrapClass"
+        :class="
+          'flex ' +
+          'flex-' +
+          flexWrapClass +
+          ' ' +
+          'flex-' +
+          flexDirectionClass +
+          ' ' +
+          'items-' +
+          alignItemClass +
+          ' ' +
+          'content-' +
+          contentClass
+        "
         :internalClass="internalClassArray"
       />
     </div>
@@ -69,6 +91,7 @@ export default Vue.extend({
       justify: "",
       internalClassArray: [] as any,
       flexJustifyClass: "",
+      contentClass: "",
       content: [
         {
           id: 0,
@@ -95,6 +118,7 @@ export default Vue.extend({
           elm: "evenly",
         },
       ],
+      alignItemClass: "",
       alignItem: [
         {
           id: 0,
@@ -117,14 +141,15 @@ export default Vue.extend({
           elm: "stretch",
         },
       ],
+      flexDirectionClass: "",
       flexDirection: [
         {
           id: 0,
-          elm: "flex-row",
+          elm: "row",
         },
-        { id: 1, elm: "flex-row-reverse" },
-        { id: 2, elm: "flex-col" },
-        { id: 3, elm: "flex-col-reverse" },
+        { id: 1, elm: "row-reverse" },
+        { id: 2, elm: "col" },
+        { id: 3, elm: "col-reverse" },
       ],
       flexFlow: "",
       flexWrap: "",
@@ -146,14 +171,33 @@ export default Vue.extend({
     };
   },
   created() {},
+  mounted() {
+    this.flexWrapClass = "wrap";
+    this.flexJustifyClass = "start";
+    this.alignItemClass = "start";
+    this.contentClass = "start";
+    this.flexDirectionClass = "row";
+  },
   methods: {
     reciveDataFromChild(recivedData: any) {
+      console.log("On top : ", recivedData.name);
       // Do something with the data
-      this.itemFlex = Number(recivedData) ? Number(recivedData) : this.itemFlex;
-      this.flexWrapClass = Number(recivedData) ? "" : recivedData;
-      this.flexJustifyClass = Number(recivedData) ? "" : recivedData;
-      this.internalClassArray.push(this.flexJustifyClass);
-      console.log("FFrom parenet : ", recivedData);
+      if (recivedData.name === "item") {
+        this.itemFlex = Number(recivedData.value)
+          ? Number(recivedData.value)
+          : this.itemFlex;
+      } else if (recivedData.name === "justify") {
+        this.flexJustifyClass = recivedData.value;
+        this.internalClassArray.push(this.flexJustifyClass);
+      } else if (recivedData.name === "flex") {
+        this.flexWrapClass = recivedData.value;
+      } else if (recivedData.name === "items") {
+        this.alignItemClass = recivedData.value;
+      } else if (recivedData.name === "content") {
+        this.contentClass = recivedData.value;
+      } else if (recivedData.name === "flexDirection") {
+        this.flexDirectionClass = recivedData.value;
+      }
     },
   },
 });
