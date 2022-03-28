@@ -10,7 +10,7 @@
           v-on:emitCurrStateToParent="reciveDataFromChild($event)"
           :placeholder="String(itemFlex)"
           :min="1"
-          :max="36"
+          :max="21"
           :valueRange="itemFlex"
           v-once
         />

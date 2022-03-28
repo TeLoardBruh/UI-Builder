@@ -1,7 +1,7 @@
 <template>
   <div :class="'justify-'+internalClass[internalClass.length - 1]">
     <div
-      class="bg-green-400 w-14 h-14 m-2 flex items-center justify-center"
+      class="bg-green-400 w-14 h-14 m-2 flex items-center justify-center p-4 rounded m-4"
       v-for="item in items"
       :key="item"
     >
