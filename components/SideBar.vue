@@ -65,7 +65,7 @@ export default {
               ></path>
             </svg>`,
           name: "Cards",
-          link: "#",
+          link: "card",
         },
         {
           type: "string",
